@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logs</title>
-    <script>
-        const eventSource = new EventSource('/logs');
-        eventSource.onmessage = function(event) {
-            const logContainer = document.getElementById('logContainer');
-            logContainer.innerHTML += event.data + '<br>'; // Adiciona o log à página
-        };
-    </script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/log-style.css') }}">
 </head>
 <body>
-    <h1>Logs do Processo</h1>
-    <div id="logContainer" style="white-space: pre-line;"></div>
+    <main>
+        <div class="container">
+            <header>
+                <img src="{{ url_for('static', filename='images/carbonexus_title.svg') }}" alt="CarboNexus" class="title-img">
+            </header>
+
+            <h1 class="title">LOG Page</h1>
+
+            <div class="log-box" id="logBox"></div>
+
+
+        </div>
+    </main>
+
 </body>
 </html>

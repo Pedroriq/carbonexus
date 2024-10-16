@@ -21,9 +21,10 @@ def gitclone():
     git_url = request.form.get('git-url')
     country = request.form.get('country')
 
-    repository = Repository(git_url)
-    git_thread = threading.Thread(target=repository.start())
-    git_thread.start()
+    repository = Repository(git_url).start()
+    # IMPLEMENTAR THREADS
+    # git_thread = threading.Thread(target=repository.start())
+    # git_thread.start()
 
     return render_template('log.html')
 
