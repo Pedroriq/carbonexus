@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logs</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/log-style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        var output = document.getElementById('output');
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '{{ url_for('log_stream') }}', true);
+        xhr.send();
+        setInterval(function() {
+          output.textContent = xhr.responseText;
+        }, 500);
+      });
+    </script>
 </head>
 <body>
     <main>
@@ -15,11 +27,10 @@
 
             <h1 class="title">LOG Page</h1>
 
-            <div class="log-box" id="logBox"></div>
-
-
+            <div class="log-box" id="logBox">
+                <pre id="output"></pre>
+            </div>
         </div>
     </main>
-
 </body>
 </html>
