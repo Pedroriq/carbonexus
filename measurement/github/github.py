@@ -19,22 +19,23 @@ class Repository:
         print(f"Clonando o repositório {self._link}...")
         git.Repo.clone_from(self._link, repository_dir)
         print(f"Repositório clonado em {repository_dir}.")
-        self.install_dependencies(repository_dir)
+        self.install_dependencies(repository_dir, actual_dir)
 
     @staticmethod
-    def install_dependencies(repo_dir):
+    def install_dependencies(repo_dir, actual_dir):
         requirements_path = os.path.join(repo_dir, "requirements.txt")
         if os.path.exists(requirements_path):
             print("Instalando dependências...")
             os.chdir(repo_dir)
-            subprocess.run(["python", "-m", "venv", "venv"])
             if platform.system() == "Windows":
+                subprocess.run(["python", "-m", "venv", "venv"])
                 pip_executable = os.path.join(repo_dir, 'venv', 'Scripts', 'pip.exe')
                 subprocess.run([pip_executable, "install", "-r", requirements_path])
+            elif platform.system() == "Linux":
+                subprocess.run(["virtualenv", "venv"])
+                pip_executable = os.path.join(repo_dir, 'venv', 'bin', 'pip')
+                subprocess.run([pip_executable, "install", "-r", requirements_path])
             os.chdir('..')
-            print(os.getcwd())
-        else:
-            print("Nenhum requirements.txt encontrado.")
 
     def start(self):
         self.clone_repo()
