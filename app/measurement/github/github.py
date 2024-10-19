@@ -35,7 +35,10 @@ class Repository:
                 subprocess.run(["virtualenv", "venv"])
                 pip_executable = os.path.join(repo_dir, 'venv', 'bin', 'pip')
                 subprocess.run([pip_executable, "install", "-r", requirements_path])
-            os.chdir('..')
+            os.chdir(actual_dir)
+            print("Dependências instaladas com sucesso")
+        else:
+            print("Nenhum requirements.txt encontrado.")
 
     def start(self):
         self.clone_repo()
