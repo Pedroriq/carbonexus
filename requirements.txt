@@ -5,9 +5,13 @@ Flask==3.0.3
 flaskwebgui==1.1.6
 gitdb==4.0.11
 GitPython==3.1.43
+GPUtil==1.4.0
 itsdangerous==2.2.0
 Jinja2==3.1.4
+loguru==0.7.2
 MarkupSafe==3.0.1
 psutil==6.0.0
+py-cpuinfo==9.0.0
 smmap==5.0.1
 Werkzeug==3.0.4
+win32-setctime==1.1.0
