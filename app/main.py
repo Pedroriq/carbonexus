@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, Response
 from flaskwebgui import FlaskUI
 from loguru import logger
 from measurement.github.github import Repository
+from measurement.pipeline.app import Pipeline
 
 import time
 import threading
@@ -57,9 +58,7 @@ def gitclone():
     git_url = request.form.get('git-url')
     country = request.form.get('country')
 
-    repository = Repository(git_url)
-
-    git_thread = threading.Thread(target=repository.start)
+    git_thread = threading.Thread(target=Pipeline, args=(git_url, country))
     git_thread.start()
 
     return render_template('log.html')

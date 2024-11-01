@@ -1,2 +1,4 @@
-family;processor_number;TDP
-core;i5-9300H;45
+PROCESSOR;TDP
+Intel(R) Core(TM) i5-9300H CPU @ 2.40GHz;45
+AMD Ryzen 5 4500 6-Core Processor;65
+13th Gen Intel(R) Core(TM) i7-13700HX;55

@@ -1,48 +1,56 @@
-import components.component as comp
-import cpuinfo
+import os.path
+
+import app.measurement.components.component as comp
 import pandas as pd
 import psutil
-from threading import Thread
-import subprocess
+from threading import Thread, Event
 
 
-def get_measurents():
-    mean_list = []
-    while True:
-        cpu_usage = process.cpu_percent(interval=1)
-        mean_list.append(cpu_usage)
-        print(len(mean_list))
-        if len(mean_list) == 60:
-            mean = sum(mean_list)/len(mean_list)
-            print(f"Essa é a media: {mean}")
-            mean_list = []
+class CpuMeasurement(Thread):
+
+    def __init__(self):
+        super().__init__()
+        self.tdp = None
+        self.process = None
+        self.event = Event()
+        self.start_informations()
+        self.start()
 
 
-def traine():
-    while True:
-        pass
+    def run(self):
+        self.event.wait()
+        self.get_measurents(self.process)
 
 
-cpu = comp.get_cpu_information()
+    def start_informations(self):
+        print('Iniciando coleta das infos da CPU')
+        basepath = os.path.dirname(__file__)
+        file_path = os.path.abspath(os.path.join(basepath, 'file', 'processors_core.csv'))
 
-cpu_voltage_file = pd.read_csv('files/processors_core.csv', sep=";")
+        cpu = comp.get_cpu_information()
 
-brand = cpu.split()[0]
-product_line = cpu.split()[1]
-model = cpu.split()[2]
+        cpu_voltage_file = pd.read_csv(file_path, sep=";")
 
-if "core" in product_line.lower():
-    consume = cpu_voltage_file[cpu_voltage_file['processor_number'] == model]['TDP']
-    print(consume)
+        self.tdp = cpu_voltage_file[cpu_voltage_file['PROCESSOR'] == cpu]['TDP']
 
-current_process = psutil.Process()
-print(current_process.pid)
-process = psutil.Process(current_process.pid)
+        current_process = psutil.Process()
+        print(current_process.pid)
+        self.process = psutil.Process(current_process.pid)
 
-thread = Thread(target=get_measurents)
-thread2 = Thread(target=traine)
+        print("INFOS CPU OK")
 
-thread.start()
-thread2.start()
 
-thread.join()
+    @staticmethod
+    def get_measurents(process):
+        mean_list = []
+        while True:
+            cpu_usage = process.cpu_percent(interval=1)
+            print(f"USO DA CPU: {cpu_usage}")
+            mean_list.append(cpu_usage)
+
+
+    def start_measurent(self):
+        self.event.set()
+
+    def stop_measurent(self):
+        self.event.clear()

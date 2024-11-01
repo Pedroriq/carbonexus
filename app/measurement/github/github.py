@@ -40,5 +40,7 @@ class Repository:
         else:
             print("Nenhum requirements.txt encontrado.")
 
+        return
+
     def start(self):
         self.clone_repo()
