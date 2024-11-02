@@ -33,23 +33,21 @@ class CpuMeasurement(Thread):
 
         self.tdp = cpu_voltage_file[cpu_voltage_file['PROCESSOR'] == cpu]['TDP']
 
-        current_process = psutil.Process()
-        print(current_process.pid)
-        self.process = psutil.Process(current_process.pid)
-
         print("INFOS CPU OK")
 
 
     @staticmethod
     def get_measurents(process):
         mean_list = []
+        print(f"PROCESS ID DO MEASURE_CPU: {process}")
         while True:
             cpu_usage = process.cpu_percent(interval=1)
             print(f"USO DA CPU: {cpu_usage}")
             mean_list.append(cpu_usage)
 
 
-    def start_measurent(self):
+    def start_measurent(self, process_id):
+        self.process = psutil.Process(process_id)
         self.event.set()
 
     def stop_measurent(self):
