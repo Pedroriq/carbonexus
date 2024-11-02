@@ -1,7 +1,7 @@
 from threading import Thread
-from app.measurement.github.github import Repository
-from app.measurement.cpu.measure_cpu import CpuMeasurement
-from app.measurement.gpu.measure_gpu import GpuMeasurement
+from measurement.github.github import Repository
+from measurement.cpu.measure_cpu import CpuMeasurement
+from measurement.gpu.measure_gpu import GpuMeasurement
 
 
 class Pipeline(Thread):

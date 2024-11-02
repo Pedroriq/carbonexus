@@ -1,6 +1,6 @@
 import os.path
 
-import app.measurement.components.component as comp
+import measurement.components.component as comp
 import pandas as pd
 import psutil
 from threading import Thread, Event
