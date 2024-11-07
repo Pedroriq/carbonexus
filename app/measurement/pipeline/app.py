@@ -12,12 +12,11 @@ class Pipeline(Thread):
 
         time.sleep(5)
 
-        # Repository(git_url).start()
+        Repository(git_url).start()
 
         processor = CpuMeasurement()
         graphic_driver = GpuMeasurement()
         code = Runner()
 
         process_id = code.start_code(processor, graphic_driver)
-
 

@@ -19,22 +19,24 @@ class Runner(Thread):
 
     def run_code(self):
         actual_dir = os.getcwd()
-        repository_dir = os.path.join(actual_dir, 'app', 'repository_git')
+        repository_dir = os.path.join(actual_dir, 'repository_git')
 
         os.chdir(repository_dir)
         if platform.system() == "Windows":
             python_executable = os.path.join(repository_dir, 'venv', 'Scripts', 'python.exe')
-            process = subprocess.Popen([python_executable, "main.py"])
+            process = subprocess.Popen([python_executable, "main.py"], shell=False)
         elif platform.system() == "Linux":
             python_executable = os.path.join(repository_dir, 'venv', 'Scripts', 'python')
             process = subprocess.run([python_executable, "main.py"])
 
         os.chdir(actual_dir)
 
-        print(f"ESSE EH O PROCESS ID DO RUNNER: {process.pid}")
-
         self.processor.start_measurent(process.pid)
-        self.graphic_driver.start_measurent()
+        self.graphic_driver.start_measurent(process.pid)
+
+        # self.processor.join()
+        # self.graphic_driver.join()
+        # self.join()
 
         return process.pid
 

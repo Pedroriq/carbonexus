@@ -1,4 +1,5 @@
 import os.path
+import time
 
 import app.measurement.components.component as comp
 import pandas as pd
@@ -19,7 +20,7 @@ class CpuMeasurement(Thread):
 
     def run(self):
         self.event.wait()
-        self.get_measurents(self.process)
+        self.get_measurents()
 
 
     def start_informations(self):
@@ -35,16 +36,19 @@ class CpuMeasurement(Thread):
 
         print("INFOS CPU OK")
 
-
-    @staticmethod
-    def get_measurents(process):
+    def get_measurents(self):
         mean_list = []
-        print(f"PROCESS ID DO MEASURE_CPU: {process}")
-        while True:
-            cpu_usage = process.cpu_percent(interval=1)
-            print(f"USO DA CPU: {cpu_usage}")
-            mean_list.append(cpu_usage)
-
+        while self.process.is_running():
+            try:
+                num_cores = psutil.cpu_count()
+                children = self.process.children(recursive=True)
+                for child in children:
+                    cpu_usage = child.cpu_percent(interval=1)
+                    print(f"USO DA CPU: {cpu_usage / num_cores}")
+                    mean_list.append(cpu_usage)
+            except Exception as e:
+                pass
+        self.stop_measurent()
 
     def start_measurent(self, process_id):
         self.process = psutil.Process(process_id)
