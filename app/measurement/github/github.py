@@ -32,7 +32,7 @@ class Repository:
                 pip_executable = os.path.join(repo_dir, 'venv', 'Scripts', 'pip.exe')
                 subprocess.run([pip_executable, "install", "-r", requirements_path])
             elif platform.system() == "Linux":
-                subprocess.run(["virtualenv", "venv"])
+                subprocess.run(["python3", "-m", "venv", "venv"])
                 pip_executable = os.path.join(repo_dir, 'venv', 'bin', 'pip')
                 subprocess.run([pip_executable, "install", "-r", requirements_path])
             os.chdir(actual_dir)

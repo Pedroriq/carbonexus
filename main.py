@@ -4,23 +4,23 @@ from flask import Flask, render_template, request, Response
 
 from flaskwebgui import FlaskUI
 from loguru import logger
-from measurement.github.github import Repository
-from measurement.pipeline.app import Pipeline
+from app.measurement.github.github import Repository
+from app.measurement.pipeline.app import Pipeline
 
 import time
 import threading
 import logging
 import sys
 
-from utils.logger import StreamToLogger
+from app.utils.logger import StreamToLogger
 
-if os.path.isfile('app/static/job.log'):
-    os.remove('app/static/job.log')
+if os.path.isfile('static/job.log'):
+    os.remove('static/job.log')
 
 logger = logging.getLogger('LOGs')
 logger.setLevel(logging.INFO)
 
-file_handler = logging.FileHandler('app/static/job.log')
+file_handler = logging.FileHandler('static/job.log')
 file_handler.setLevel(logging.INFO)
 
 console_handler = logging.StreamHandler(sys.stdout)
@@ -35,7 +35,7 @@ logger.addHandler(console_handler)
 
 
 def flask_logger():
-    with open("app/static/job.log", "r") as log_info:
+    with open("static/job.log", "r") as log_info:
         while True:
             sys.stdout = StreamToLogger(logger, logging.INFO)
             data = log_info.read()

@@ -1,0 +1,12 @@
+[flake8]pyt
+ignore = E203, E266, E501, W503, F403, F401, E722
+max-line-length = 80
+select = B,C,E,F,W,T4,B9
+exclude =
+    .git,
+    _pycache_,
+    venv,
+    src/assets,
+    src/fonts,
+    src/temp
+
