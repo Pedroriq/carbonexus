@@ -37,18 +37,23 @@ class CpuMeasurement(Thread):
         print("INFOS CPU OK")
 
     def get_measurents(self):
-        mean_list = []
         while self.process.is_running():
             try:
                 num_cores = psutil.cpu_count()
                 children = self.process.children(recursive=True)
-                for child in children:
-                    cpu_usage = child.cpu_percent(interval=1)
-                    print(f"USO DA CPU: {cpu_usage / num_cores}")
-                    mean_list.append(cpu_usage)
+                if len(children) != 0:
+                    for child in children:
+                        self.measure_cpu(child, num_cores)
+                else:
+                    self.measure_cpu(self.process, num_cores)
             except Exception as e:
                 pass
         self.stop_measurent()
+
+    def measure_cpu(self, process, num_cores):
+        cpu_usage = process.cpu_percent(interval=1)
+        print(f"USO DA CPU: {cpu_usage / num_cores}")
+        return cpu_usage / num_cores
 
     def start_measurent(self, process_id):
         self.process = psutil.Process(process_id)
