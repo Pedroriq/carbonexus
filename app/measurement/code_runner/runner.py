@@ -27,7 +27,7 @@ class Runner(Thread):
             process = subprocess.Popen([python_executable, "main.py"], shell=False)
         elif platform.system() == "Linux":
             python_executable = os.path.join(repository_dir, 'venv', 'bin', 'python')
-            process = subprocess.run([python_executable, "main.py"])
+            process = subprocess.Popen([python_executable, "main.py"])
 
         os.chdir(actual_dir)
 
