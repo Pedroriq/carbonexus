@@ -23,7 +23,7 @@ class GpuMeasurement(Thread):
             self.total_energy += pynvml.nvmlDeviceGetPowerUsage(self.handle) / 1000
             time.sleep(1)
             print(f'{"{:.7f}".format(self.total_energy / (1000 * 3600))} kWh')
-        self.stop_measurent()
+        return
 
     def start_measurent(self, process_id):
         self.process = psutil.Process(process_id)
@@ -32,3 +32,7 @@ class GpuMeasurement(Thread):
     def stop_measurent(self):
         pynvml.nvmlShutdown()
         self.event.clear()
+    
+    @property
+    def total_energy_gpu(self):
+        return self.total_energy / (1000 * 3600)

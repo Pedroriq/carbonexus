@@ -16,7 +16,6 @@ class Runner(Thread):
         self.runner_event.wait()
         self.run_code()
 
-
     def run_code(self):
         actual_dir = os.getcwd()
         repository_dir = os.path.join(actual_dir, 'repository_git')
@@ -34,9 +33,8 @@ class Runner(Thread):
         self.processor.start_measurent(process.pid)
         self.graphic_driver.start_measurent(process.pid)
 
-        # self.processor.join()
-        # self.graphic_driver.join()
-        # self.join()
+        self.processor.join()
+        self.graphic_driver.join()
 
         return process.pid
 
