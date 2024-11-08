@@ -14,6 +14,7 @@ class CpuMeasurement(Thread):
         super().__init__()
         self.tdp = None
         self.cpu_use_list = []
+        self.time_list = []
         self.process = None
         self.event = Event()
         self.start_informations()
@@ -37,24 +38,23 @@ class CpuMeasurement(Thread):
         self.tdp = cpu_voltage_file[cpu_voltage_file['PROCESSOR'] == cpu]['TDP'].values[0]
 
     def get_measurents(self):
-        time_list = []
-        while self.process.is_running():
+        timeout = 0
+        while self.process.is_running() and timeout < 100 and (self.process.status() != psutil.STATUS_ZOMBIE):
+            timeout += 1
             try:
                 num_cores = psutil.cpu_count()
                 children = self.process.children(recursive=True)
                 if len(children) != 0:
                     for child in children:
-                        cpu_usage = self.measure_cpu(child, num_cores)
+                        self.measure_cpu(child, num_cores)
                 else:
-                    cpu_usage = self.measure_cpu(self.process, num_cores)
-                time_list.append(datetime.now())
+                    self.measure_cpu(self.process, num_cores)
             except Exception as e:
                 pass
-            if cpu_usage == 0.0:
-                self.process.terminate()
-                self.process.wait()
+        self.process.terminate()
+        self.process.wait()
         df_content = {
-            "time":time_list,
+            "time":self.time_list,
             "cpu_usage": self.cpu_use_list
         }
         df_cpu = pd.DataFrame(df_content)
@@ -65,6 +65,7 @@ class CpuMeasurement(Thread):
     def measure_cpu(self, process, num_cores):
         cpu_usage = process.cpu_percent(interval=1)
         print(f"USO DA CPU: {cpu_usage / num_cores}")
+        self.time_list.append(datetime.now())
         self.cpu_use_list.append(cpu_usage / num_cores)
         return cpu_usage / num_cores
 
