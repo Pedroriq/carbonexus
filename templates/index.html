@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +12,6 @@
 <body>
     <main>
         <div class="container">
-
             <header>
                 <img src="{{ url_for('static', filename='images/carbonexus_title.svg') }}" alt="CarboNexus" class="title-img">
             </header>
@@ -20,13 +20,14 @@
                 <form action="/submit" method="POST">
                     <div class="form-group">
                         <label for="git-url">Github URL: </label>
-                        <input type="text" id="git-url" name="git-url" required placeholder="https://github.com/YourNickname/YourRepoository.git">
+                        <input type="text" id="git-url" name="git-url" required placeholder="https://github.com/YourNickname/YourRepository.git">
                     </div>
 
                     <div class="form-group">
                         <label for="country">País: </label>
                         <input type="text" id="country" name="country" required placeholder="País" autocomplete="off">
                         <div id="suggestions"></div>
+                        <input type="hidden" id="zoneCode" name="zoneCode">
                     </div>
 
                     <button type="submit">Iniciar treinamento</button>
@@ -34,38 +35,27 @@
             </section>
         </div>
     </main>
-</body>
 
-<script>
-    async function getRequest(url = '') {
-    const response = await fetch(url, {
-        method: 'GET',
-        cache: 'no-cache'
-    })
-    return response.json()
-    }
-    document.addEventListener('DOMContentLoaded', function () {
-        let url = document.location
-        let route = "/flaskwebgui-keep-server-alive"
-        let interval_request = 3 * 1000 //sec
-        function keep_alive_server() {
-            getRequest(url + route)
-                .then(data => console.log(data))
-        }
-        setInterval(keep_alive_server, interval_request)()
-    })
-
-
-    const input = document.getElementById('country');
+    <script>
+        const input = document.getElementById('country');
         const suggestionsBox = document.getElementById('suggestions');
-        let cities = [];
+        const zoneCodeInput = document.getElementById('zoneCode');
+        let countries = [];
 
-        // Função para buscar dados da API
-        async function fetchCities() {
+        // Função para buscar dados da API e filtrar apenas as entradas principais de cada país
+        async function fetchCountries() {
             try {
                 const response = await fetch('https://api.electricitymap.org/v3/zones');
                 const data = await response.json();
-                cities = Object.values(data).map(zone => zone.zoneName); // Extrai o zoneName
+                
+                countries = Object.entries(data)
+                    .filter(([code]) => !code.includes('-'))  // Filtra códigos sem hífen (entradas principais)
+                    .map(([code, zone]) => {
+                        return {
+                            code: code,           
+                            countryName: zone.zoneName // Nome do país principal
+                        };
+                    });
             } catch (error) {
                 console.error('Erro ao buscar dados da API:', error);
             }
@@ -78,13 +68,18 @@
                 suggestionsBox.style.display = 'none';
                 return;
             }
-            const filteredCities = cities.filter(city => city.toLowerCase().includes(query.toLowerCase()));
-            if (filteredCities.length > 0) {
-                filteredCities.forEach(city => {
+            const filteredCountries = countries.filter(country => 
+                country.countryName.toLowerCase().includes(query.toLowerCase())
+            );
+
+            if (filteredCountries.length > 0) {
+                filteredCountries.forEach(country => {
                     const suggestionItem = document.createElement('div');
-                    suggestionItem.textContent = city;
+                    suggestionItem.textContent = country.countryName;
+                    
                     suggestionItem.onclick = () => {
-                        input.value = city;
+                        input.value = country.countryName;
+                        zoneCodeInput.value = country.code; // Salva o código do país selecionado
                         suggestionsBox.style.display = 'none';
                     };
                     suggestionsBox.appendChild(suggestionItem);
@@ -95,10 +90,8 @@
             }
         }
 
-        // Evento para capturar a entrada do usuário e exibir as sugestões
         input.addEventListener('input', () => showSuggestions(input.value));
-
-        // Busca inicial dos dados ao carregar a página
-        window.onload = fetchCities;
-</script>
+        window.onload = fetchCountries;
+    </script>
+</body>
 </html>
