@@ -21,7 +21,7 @@ class Pipeline(Thread):
         code = Runner()
 
         start_time = datetime.now()
-        process_id = code.start_code(processor, graphic_driver)
+        code.start_code(processor, graphic_driver)
         code.join()
         end_time = datetime.now()
 

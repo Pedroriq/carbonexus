@@ -8,4 +8,4 @@ def calculate_kwh(tdp, total_energy_gpu, time_consume):
     mean_cpu = mean_cpu_percent / 100
     cpu_consumption_kwh = (mean_cpu * tdp) / 1000
     total_consumption = (cpu_consumption_kwh + total_energy_gpu) * pue * time_consume
-    print(f'{"{:.7f}".format(total_consumption)} kW')
+    print(f'TOTAL USE: {"{:.7f}".format(total_consumption)} kW')
