@@ -25,7 +25,8 @@
 
                     <div class="form-group">
                         <label for="country">País: </label>
-                        <input type="text" id="country" name="country" required placeholder="País">
+                        <input type="text" id="country" name="country" required placeholder="País" autocomplete="off">
+                        <div id="suggestions"></div>
                     </div>
 
                     <button type="submit">Iniciar treinamento</button>
@@ -53,5 +54,51 @@
         }
         setInterval(keep_alive_server, interval_request)()
     })
+
+
+    const input = document.getElementById('country');
+        const suggestionsBox = document.getElementById('suggestions');
+        let cities = [];
+
+        // Função para buscar dados da API
+        async function fetchCities() {
+            try {
+                const response = await fetch('https://api.electricitymap.org/v3/zones');
+                const data = await response.json();
+                cities = Object.values(data).map(zone => zone.zoneName); // Extrai o zoneName
+            } catch (error) {
+                console.error('Erro ao buscar dados da API:', error);
+            }
+        }
+
+        // Função para exibir sugestões com base no valor digitado
+        function showSuggestions(query) {
+            suggestionsBox.innerHTML = ''; // Limpa as sugestões anteriores
+            if (query.length === 0) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+            const filteredCities = cities.filter(city => city.toLowerCase().includes(query.toLowerCase()));
+            if (filteredCities.length > 0) {
+                filteredCities.forEach(city => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.textContent = city;
+                    suggestionItem.onclick = () => {
+                        input.value = city;
+                        suggestionsBox.style.display = 'none';
+                    };
+                    suggestionsBox.appendChild(suggestionItem);
+                });
+                suggestionsBox.style.display = 'block';
+            } else {
+                suggestionsBox.style.display = 'none';
+            }
+        }
+
+        // Evento para capturar a entrada do usuário e exibir as sugestões
+        input.addEventListener('input', () => showSuggestions(input.value));
+
+        // Busca inicial dos dados ao carregar a página
+        window.onload = fetchCities;
 </script>
 </html>
