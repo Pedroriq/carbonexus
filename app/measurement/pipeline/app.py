@@ -5,7 +5,7 @@ from app.measurement.github.github import Repository
 from app.measurement.cpu.measure_cpu import CpuMeasurement
 from app.measurement.gpu.measure_gpu import GpuMeasurement
 from app.measurement.code_runner.runner import Runner
-from app.utils.energy_consume import calculate_kwh
+from app.utils.energy_consume import EnergyConsumption
 
 
 class Pipeline(Thread):
@@ -27,7 +27,10 @@ class Pipeline(Thread):
 
         total_time = (end_time - start_time).total_seconds() / 3600
 
-        calculate_kwh(processor.get_tdp, graphic_driver.total_energy_gpu, total_time)
+        energy_consumption = EnergyConsumption()
+
+        energy_consumption.calculate_kwh(processor.get_tdp, graphic_driver.total_energy_gpu, total_time)
+        energy_consumption.access_api()
         
 
 

@@ -28,6 +28,7 @@ pyflakes==3.2.0
 pynvml==11.5.3
 python-dateutil==2.9.0.post0
 pytz==2024.2
+requests==2.32.3
 six==1.16.0
 smmap==5.0.1
 tzdata==2024.2
