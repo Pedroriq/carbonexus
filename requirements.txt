@@ -1,5 +1,7 @@
 black==24.10.0
 blinker==1.8.2
+certifi==2024.8.30
+charset-normalizer==3.4.0
 click==8.1.7
 colorama==0.4.6
 flake8==7.1.1
@@ -8,6 +10,7 @@ flaskwebgui==1.1.6
 gitdb==4.0.11
 GitPython==3.1.43
 GPUtil==1.4.0
+idna==3.10
 isort==5.13.2
 itsdangerous==2.2.0
 Jinja2==3.1.4
@@ -24,6 +27,7 @@ platformdirs==4.3.6
 psutil==6.0.0
 py-cpuinfo==9.0.0
 pycodestyle==2.12.1
+pycountry==24.6.1
 pyflakes==3.2.0
 pynvml==11.5.3
 python-dateutil==2.9.0.post0
@@ -32,5 +36,6 @@ requests==2.32.3
 six==1.16.0
 smmap==5.0.1
 tzdata==2024.2
+urllib3==2.2.3
 Werkzeug==3.0.4
 win32-setctime==1.1.0

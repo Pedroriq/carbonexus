@@ -2,7 +2,7 @@ import pandas as pd
 from app.api.api import ElectricityAPI
 
 
-class EnergyConsumption():
+class EnergyConsumption:
     def __init__(self):
         self.total_consumption = None
 
@@ -15,6 +15,5 @@ class EnergyConsumption():
         self.total_consumption = (cpu_consumption_kwh + total_energy_gpu) * pue * time_consume
         print(f'TOTAL USE: {"{:.7f}".format(self.total_consumption)} kW')
     
-    def access_api(self):
-        api = ElectricityAPI()
-        api.test_api_endpoint('v3/carbon-intensity/latest')
+    def calculate_carbon_intensity(self, carbon_intensity_country):
+        return self.total_consumption * carbon_intensity_country
