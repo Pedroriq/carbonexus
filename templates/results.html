@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO2 Impact Result</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/results.css') }}">
+</head>
+<body>
+    <h1>CO2 Impact</h1>
+    <p>Compare the environmental impact of your analysis with common items:</p>
+
+    <div id="impact-co2-container"></div>
+
+    <script>
+        const result = {{ result }};
+
+        const container = document.getElementById('impact-co2-container');
+        const script = document.createElement('script');
+
+        script.name = "impact-co2";
+        script.src = "https://impactco2.fr/iframe.js";
+        script.setAttribute("data-type", "comparateur");
+        script.setAttribute("data-search", `?value=${result}&comparisons=piscine,telephonebasique,repasvegetalien&language=en&theme=default`);
+
+        container.appendChild(script);
+    </script>
+</body>
+</html>

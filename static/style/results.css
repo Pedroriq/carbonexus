@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #F0F0F0;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1 {
+    color: #40DFAE;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 18px;
+    margin-bottom: 40px;
+    text-align: center;
+    max-width: 600px;
+}
+
+#impact-co2-container {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+footer {
+    margin-top: 40px;
+    font-size: 14px;
+    color: #666;
+}
+
+footer a {
+    color: #40DFAE;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
