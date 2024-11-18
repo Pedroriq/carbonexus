@@ -61,6 +61,9 @@ class CpuMeasurement(Thread):
 
         df_cpu = pd.DataFrame(df_content)
         df_cpu = df_cpu[df_cpu['cpu_usage'] != 0]
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename_with_timestamp = f"app/measurement/test_result/test_{timestamp}.csv"
+        df_cpu.to_csv(filename_with_timestamp,index=False,header=True)
         df_cpu.to_csv("app/measurement/test_result/test.csv",index=False,header=True)
         return
 
