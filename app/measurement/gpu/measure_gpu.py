@@ -1,8 +1,8 @@
-from threading import Thread, Event
-
-import pynvml
 import time
+from threading import Event, Thread
+
 import psutil
+import pynvml
 
 
 class GpuMeasurement(Thread):
@@ -19,9 +19,13 @@ class GpuMeasurement(Thread):
     def run(self):
         self.event.wait()
         while self.process.is_running():
-            self.total_energy += pynvml.nvmlDeviceGetPowerUsage(self.handle) / 1000
+            self.total_energy += (
+                pynvml.nvmlDeviceGetPowerUsage(self.handle) / 1000
+            )
             time.sleep(1)
-            print(f'USO DA GPU {"{:.7f}".format(self.total_energy / (1000 * 3600))} kWh')
+            print(
+                f'USO DA GPU {"{:.7f}".format(self.total_energy / (1000 * 3600))} kWh'
+            )
         return
 
     def start_measurent(self, process_id):
@@ -31,7 +35,7 @@ class GpuMeasurement(Thread):
     def stop_measurent(self):
         pynvml.nvmlShutdown()
         self.event.clear()
-    
+
     @property
     def total_energy_gpu(self):
         return self.total_energy / (1000 * 3600)

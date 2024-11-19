@@ -1,7 +1,7 @@
-from threading import Thread, Event
 import os
 import platform
 import subprocess
+from threading import Event, Thread
 
 
 class Runner(Thread):
@@ -18,14 +18,20 @@ class Runner(Thread):
 
     def run_code(self):
         actual_dir = os.getcwd()
-        repository_dir = os.path.join(actual_dir, 'repository_git')
+        repository_dir = os.path.join(actual_dir, "repository_git")
 
         os.chdir(repository_dir)
         if platform.system() == "Windows":
-            python_executable = os.path.join(repository_dir, 'venv', 'Scripts', 'python.exe')
-            process = subprocess.Popen([python_executable, "main.py"], shell=False)
+            python_executable = os.path.join(
+                repository_dir, "venv", "Scripts", "python.exe"
+            )
+            process = subprocess.Popen(
+                [python_executable, "main.py"], shell=False
+            )
         elif platform.system() == "Linux":
-            python_executable = os.path.join(repository_dir, 'venv', 'bin', 'python')
+            python_executable = os.path.join(
+                repository_dir, "venv", "bin", "python"
+            )
             process = subprocess.Popen([python_executable, "main.py"])
 
         os.chdir(actual_dir)

@@ -1,11 +1,11 @@
 import os.path
-import time
 from datetime import datetime
+from threading import Event, Thread
 
-import app.measurement.components.component as comp
 import pandas as pd
 import psutil
-from threading import Thread, Event
+
+import app.measurement.components.component as comp
 
 
 class CpuMeasurement(Thread):
@@ -20,22 +20,24 @@ class CpuMeasurement(Thread):
         self.start_informations()
         self.start()
 
-
     def run(self):
         self.event.wait()
         self.get_measurents()
 
-
     def start_informations(self):
-        print('Iniciando coleta das infos da CPU')
+        print("Iniciando coleta das infos da CPU")
         basepath = os.path.dirname(__file__)
-        file_path = os.path.abspath(os.path.join(basepath, 'file', 'processors_core.csv'))
+        file_path = os.path.abspath(
+            os.path.join(basepath, "file", "processors_core.csv")
+        )
 
         cpu = comp.get_cpu_information()
 
         cpu_voltage_file = pd.read_csv(file_path, sep=";")
 
-        self.tdp = cpu_voltage_file[cpu_voltage_file['PROCESSOR'] == cpu]['TDP'].values[0]
+        self.tdp = cpu_voltage_file[cpu_voltage_file["PROCESSOR"] == cpu][
+            "TDP"
+        ].values[0]
 
     def get_measurents(self):
         while self.process.is_running():
@@ -51,20 +53,21 @@ class CpuMeasurement(Thread):
                 if self.process.status() == psutil.STATUS_ZOMBIE:
                     self.process.terminate()
                     self.process.wait()
-            except Exception as e:
+            except Exception:
                 pass
 
-        df_content = {
-            "time":self.time_list,
-            "cpu_usage": self.cpu_use_list
-        }
+        df_content = {"time": self.time_list, "cpu_usage": self.cpu_use_list}
 
         df_cpu = pd.DataFrame(df_content)
-        df_cpu = df_cpu[df_cpu['cpu_usage'] != 0]
+        df_cpu = df_cpu[df_cpu["cpu_usage"] != 0]
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        filename_with_timestamp = f"app/measurement/test_result/test_{timestamp}.csv"
-        df_cpu.to_csv(filename_with_timestamp,index=False,header=True)
-        df_cpu.to_csv("app/measurement/test_result/test.csv",index=False,header=True)
+        filename_with_timestamp = (
+            f"app/measurement/test_result/test_{timestamp}.csv"
+        )
+        df_cpu.to_csv(filename_with_timestamp, index=False, header=True)
+        df_cpu.to_csv(
+            "app/measurement/test_result/test.csv", index=False, header=True
+        )
         return
 
     def measure_cpu(self, process, num_cores):
@@ -81,7 +84,7 @@ class CpuMeasurement(Thread):
 
     def stop_measurent(self):
         self.event.clear()
-    
+
     @property
     def get_tdp(self):
         return self.tdp

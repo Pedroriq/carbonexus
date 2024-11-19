@@ -1,7 +1,8 @@
 import platform
-import psutil
-import GPUtil
+
 import cpuinfo
+import GPUtil
+import psutil
 
 
 def get_system_information():
@@ -18,7 +19,7 @@ def get_system_information():
 
 def get_cpu_information():
     cpu_info = cpuinfo.get_cpu_info()
-    cpu_model = cpu_info['brand_raw']
+    cpu_model = cpu_info["brand_raw"]
     return cpu_model
 
 
@@ -33,7 +34,7 @@ def get_memory_information():
 
 
 def get_disk_information():
-    disk_info = psutil.disk_usage('/')
+    disk_info = psutil.disk_usage("/")
 
     print("\nDisk Information:")
     print(f"Total Disk Space: {disk_info.total} bytes")
