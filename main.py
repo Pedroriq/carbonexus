@@ -69,15 +69,13 @@ def gitclone():
 
 @app.route('/log_stream', methods=['GET'])
 def log_stream():
-    if not result_queue.empty():
-        result = result_queue.get()
-        return render_template('results.html', result=result)
-
     return Response(flask_logger(), mimetype='text/plain', content_type='text/event-stream')
 
 
 @app.route('/results', methods=['GET'])
 def results():
+    result = result_queue.get()
+    return render_template('results.html', result=result)
 
 
 if __name__ == '__main__':

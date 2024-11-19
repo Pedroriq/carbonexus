@@ -7,23 +7,11 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/results.css') }}">
 </head>
 <body>
-    <h1>CO2 Impact</h1>
-    <p>Compare the environmental impact of your analysis with common items:</p>
+    <h1>Impacto de CO2</h1>
 
-    <div id="impact-co2-container"></div>
+    <div id="impact-co2-container">
+        <script name="impact-co2" src="https://impactco2.fr/iframe.js" data-type="comparateur" data-search="?value={{ result }}&comparisons=terre-voiture,clefusb,repasavecdupoulet&language=en&theme=default"></script>
+    </div>
 
-    <script>
-        const result = {{ result }};
-
-        const container = document.getElementById('impact-co2-container');
-        const script = document.createElement('script');
-
-        script.name = "impact-co2";
-        script.src = "https://impactco2.fr/iframe.js";
-        script.setAttribute("data-type", "comparateur");
-        script.setAttribute("data-search", `?value=${result}&comparisons=piscine,telephonebasique,repasvegetalien&language=en&theme=default`);
-
-        container.appendChild(script);
-    </script>
 </body>
 </html>
