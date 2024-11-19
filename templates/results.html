@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO2 Impact Result</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/results.css') }}">
+</head>
+<body>
+    <h1>Impacto de CO2</h1>
+
+    <div id="impact-co2-container">
+        <script name="impact-co2" src="https://impactco2.fr/iframe.js" data-type="comparateur" data-search="?value={{ result }}&comparisons=terre-voiture,clefusb,repasavecdupoulet&language=en&theme=default"></script>
+    </div>
+
+</body>
+</html>

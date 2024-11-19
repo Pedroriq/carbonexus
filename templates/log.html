@@ -6,17 +6,33 @@
     <title>Logs</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/log-style.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $(document).ready(function(){
-        var output = document.getElementById('output');
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '{{ url_for('log_stream') }}', true);
-        xhr.send();
-        setInterval(function() {
-          output.textContent = xhr.responseText;
-        }, 500);
-      });
-    </script>
+<script>
+  $(document).ready(function(){
+    var output = document.getElementById('output');
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('GET', '{{ url_for('log_stream') }}', true);
+
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        // Atualiza o conteúdo do output com a resposta completa
+        output.textContent = xhr.responseText;
+      }
+    };
+
+    // Envia a requisição
+    xhr.send();
+
+    // Atualiza a tela periodicamente (não mais necessário para o redirecionamento)
+    setInterval(function() {
+      output.textContent = xhr.responseText;
+      if (output.textContent.includes("QUANTIDADE DE CARBONO EMITIDO:")) {
+        console.log("Entrou")
+        window.location.href = "{{ url_for('results') }}";
+        }
+    }, 500);
+  });
+</script>
 </head>
 <body>
     <main>

@@ -12,7 +12,7 @@ from app.api.api import ElectricityAPI
 
 
 class Pipeline(Thread):
-    def __init__(self, git_url, country):
+    def __init__(self, git_url, country, result_queue):
         super().__init__()
 
         time.sleep(5)
@@ -23,7 +23,7 @@ class Pipeline(Thread):
             time.sleep(10)
             sys.exit()
 
-        # Repository(git_url).start()
+        Repository(git_url).start()
 
         processor = CpuMeasurement()
         graphic_driver = GpuMeasurement()
@@ -40,4 +40,8 @@ class Pipeline(Thread):
         energy_consumption.calculate_kwh(processor.get_tdp, graphic_driver.total_energy_gpu, total_time)
         co2_eq = energy_consumption.calculate_carbon_intensity(carbon_intensity_country)
 
-        print(f'QUANTIDADE DE CARBONO EMITIDO: {round(co2_eq, 4)}g')
+        result_co2 = round(co2_eq, 4)
+        result_co2_kg = result_co2/1000
+        result_queue.put(result_co2_kg)
+
+        print(f'QUANTIDADE DE CARBONO EMITIDO: {result_co2}g')

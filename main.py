@@ -11,6 +11,7 @@ import time
 import threading
 import logging
 import sys
+import queue
 
 from app.utils.logger import StreamToLogger
 
@@ -32,6 +33,8 @@ console_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
+
+result_queue = queue.Queue()
 
 
 def flask_logger():
@@ -58,7 +61,7 @@ def gitclone():
     git_url = request.form.get('git-url')
     country = request.form.get('country')
 
-    git_thread = threading.Thread(target=Pipeline, args=(git_url, country))
+    git_thread = threading.Thread(target=Pipeline, args=(git_url, country, result_queue))
     git_thread.start()
 
     return render_template('log.html')
@@ -67,6 +70,12 @@ def gitclone():
 @app.route('/log_stream', methods=['GET'])
 def log_stream():
     return Response(flask_logger(), mimetype='text/plain', content_type='text/event-stream')
+
+
+@app.route('/results', methods=['GET'])
+def results():
+    result = result_queue.get()
+    return render_template('results.html', result=result)
 
 
 if __name__ == '__main__':
