@@ -1,8 +1,9 @@
 import os
+import platform
 import subprocess
+
 import git
 from git import rmtree
-import platform
 
 
 class Repository:
@@ -11,7 +12,7 @@ class Repository:
 
     def clone_repo(self):
         actual_dir = os.getcwd()
-        repository_dir = os.path.join(actual_dir, 'repository_git')
+        repository_dir = os.path.join(actual_dir, "repository_git")
 
         if os.path.exists(repository_dir):
             rmtree(repository_dir)
@@ -29,12 +30,18 @@ class Repository:
             os.chdir(repo_dir)
             if platform.system() == "Windows":
                 subprocess.run(["python", "-m", "venv", "venv"])
-                pip_executable = os.path.join(repo_dir, 'venv', 'Scripts', 'pip.exe')
-                subprocess.run([pip_executable, "install", "-r", requirements_path])
+                pip_executable = os.path.join(
+                    repo_dir, "venv", "Scripts", "pip.exe"
+                )
+                subprocess.run(
+                    [pip_executable, "install", "-r", requirements_path]
+                )
             elif platform.system() == "Linux":
                 subprocess.run(["python3", "-m", "venv", "venv"])
-                pip_executable = os.path.join(repo_dir, 'venv', 'bin', 'pip')
-                subprocess.run([pip_executable, "install", "-r", requirements_path])
+                pip_executable = os.path.join(repo_dir, "venv", "bin", "pip")
+                subprocess.run(
+                    [pip_executable, "install", "-r", requirements_path]
+                )
             os.chdir(actual_dir)
             print("Dependências instaladas com sucesso")
         else:

@@ -1,33 +1,30 @@
+import logging
 import os
+import queue
+import sys
+import threading
+import time
 
-from flask import Flask, render_template, request, Response
-
+from flask import Flask, Response, render_template, request
 from flaskwebgui import FlaskUI
 from loguru import logger
-from app.measurement.github.github import Repository
+
 from app.measurement.pipeline.app import Pipeline
-
-import time
-import threading
-import logging
-import sys
-import queue
-
 from app.utils.logger import StreamToLogger
 
-if os.path.isfile('static/job.log'):
-    os.remove('static/job.log')
+if os.path.isfile("static/job.log"):
+    os.remove("static/job.log")
 
-logger = logging.getLogger('LOGs')
+logger = logging.getLogger("LOGs")
 logger.setLevel(logging.INFO)
 
-file_handler = logging.FileHandler('static/job.log')
+file_handler = logging.FileHandler("static/job.log")
 file_handler.setLevel(logging.INFO)
 
 console_handler = logging.StreamHandler(sys.stdout)
 console_handler.setLevel(logging.INFO)
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(message)s")
 file_handler.setFormatter(formatter)
 console_handler.setFormatter(formatter)
 
@@ -48,36 +45,40 @@ def flask_logger():
 
 app = Flask(__name__)
 
-ui = FlaskUI(app=app, server='flask')
+ui = FlaskUI(app=app, server="flask")
 
 
-@app.route('/')
+@app.route("/")
 def index_page():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/submit', methods=['GET', 'POST'])
+@app.route("/submit", methods=["GET", "POST"])
 def gitclone():
-    git_url = request.form.get('git-url')
-    country = request.form.get('country')
+    git_url = request.form.get("git-url")
+    country = request.form.get("country")
 
-    git_thread = threading.Thread(target=Pipeline, args=(git_url, country, result_queue))
+    git_thread = threading.Thread(
+        target=Pipeline, args=(git_url, country, result_queue)
+    )
     git_thread.start()
 
-    return render_template('log.html')
+    return render_template("log.html")
 
 
-@app.route('/log_stream', methods=['GET'])
+@app.route("/log_stream", methods=["GET"])
 def log_stream():
-    return Response(flask_logger(), mimetype='text/plain', content_type='text/event-stream')
+    return Response(
+        flask_logger(), mimetype="text/plain", content_type="text/event-stream"
+    )
 
 
-@app.route('/results', methods=['GET'])
+@app.route("/results", methods=["GET"])
 def results():
     result = result_queue.get()
-    return render_template('results.html', result=result)
+    return render_template("results.html", result=result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # ui.run()
     app.run()
