@@ -12,13 +12,13 @@ from loguru import logger
 from app.measurement.pipeline.app import Pipeline
 from app.utils.logger import StreamToLogger
 
-if os.path.isfile("static/job.log"):
-    os.remove("static/job.log")
+if os.path.isfile("job.log"):
+    os.remove("job.log")
 
 logger = logging.getLogger("LOGs")
 logger.setLevel(logging.INFO)
 
-file_handler = logging.FileHandler("static/job.log")
+file_handler = logging.FileHandler("job.log")
 file_handler.setLevel(logging.INFO)
 
 console_handler = logging.StreamHandler(sys.stdout)
@@ -35,7 +35,7 @@ result_queue = queue.Queue()
 
 
 def flask_logger():
-    with open("static/job.log", "r") as log_info:
+    with open("job.log", "r") as log_info:
         while True:
             sys.stdout = StreamToLogger(logger, logging.INFO)
             data = log_info.read()
@@ -80,5 +80,5 @@ def results():
 
 
 if __name__ == "__main__":
-    # ui.run()
-    app.run()
+    ui.run()
+    # app.run()
