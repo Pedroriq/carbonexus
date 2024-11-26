@@ -65,13 +65,9 @@ class CpuMeasurement(Thread):
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         if "test_result" not in os.listdir(os.getcwd()):
             os.mkdir("test_result")
-        filename_with_timestamp = (
-            f"test_result/test_{timestamp}.csv"
-        )
+        filename_with_timestamp = f"test_result/test_{timestamp}.csv"
         df_cpu.to_csv(filename_with_timestamp, index=False, header=True)
-        df_cpu.to_csv(
-            "test_result/test.csv", index=False, header=True
-        )
+        df_cpu.to_csv("test_result/test.csv", index=False, header=True)
         return
 
     def measure_cpu(self, process, num_cores):
