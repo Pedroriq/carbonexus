@@ -15,19 +15,16 @@
 
     xhr.onload = function() {
       if (xhr.status === 200) {
-        // Atualiza o conteúdo do output com a resposta completa
         output.textContent = xhr.responseText;
       }
     };
 
-    // Envia a requisição
     xhr.send();
 
-    // Atualiza a tela periodicamente (não mais necessário para o redirecionamento)
     setInterval(function() {
       output.textContent = xhr.responseText;
+      logBox.scrollTop = logBox.scrollHeight;
       if (output.textContent.includes("QUANTIDADE DE CARBONO EMITIDO:")) {
-        console.log("Entrou")
         window.location.href = "{{ url_for('results') }}";
         }
     }, 500);
