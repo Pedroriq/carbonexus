@@ -26,7 +26,9 @@ class CpuMeasurement(Thread):
 
     def start_informations(self):
         print("Iniciando coleta das infos da CPU")
-        basepath = os.path.dirname(__file__)
+        basepath = os.getcwd()
+        if "file" not in os.listdir(basepath):
+            os.mkdir("file")
         file_path = os.path.abspath(
             os.path.join(basepath, "file", "processors_core.csv")
         )
@@ -61,13 +63,11 @@ class CpuMeasurement(Thread):
         df_cpu = pd.DataFrame(df_content)
         df_cpu = df_cpu[df_cpu["cpu_usage"] != 0]
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        filename_with_timestamp = (
-            f"app/measurement/test_result/test_{timestamp}.csv"
-        )
+        if "test_result" not in os.listdir(os.getcwd()):
+            os.mkdir("test_result")
+        filename_with_timestamp = f"test_result/test_{timestamp}.csv"
         df_cpu.to_csv(filename_with_timestamp, index=False, header=True)
-        df_cpu.to_csv(
-            "app/measurement/test_result/test.csv", index=False, header=True
-        )
+        df_cpu.to_csv("test_result/test.csv", index=False, header=True)
         return
 
     def measure_cpu(self, process, num_cores):
